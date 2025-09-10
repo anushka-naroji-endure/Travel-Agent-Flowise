@@ -536,7 +536,7 @@
       },
       "data": {
         "id": "agentAgentflow_0",
-        "label": "Agent 0",
+        "label": "Knowledge Mapper",
         "version": 2,
         "name": "agentAgentflow",
         "type": "Agent",
@@ -942,7 +942,7 @@
       },
       "data": {
         "id": "agentAgentflow_1",
-        "label": "Agent 1",
+        "label": "Depth Investigator",
         "version": 2,
         "name": "agentAgentflow",
         "type": "Agent",
@@ -1339,7 +1339,7 @@
       },
       "data": {
         "id": "llmAgentflow_1",
-        "label": "Agent 2",
+        "label": "Research Strategist",
         "version": 1,
         "name": "llmAgentflow",
         "type": "LLM",
