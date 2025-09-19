@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Travel Agent</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; background: #f4f7f9; }
+    h1 { color: #2c3e50; }
+    form { margin-bottom: 20px; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,.1); }
+    label { display: block; margin: 10px 0 5px; }
+    input, textarea, button { width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #ccc; }
+    button { background: #3498db; color: #fff; border: none; cursor: pointer; font-weight: bold; }
+    button:hover { background: #b92929; }
+    .result { padding: 15px; background: #ecf0f1; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <h1>Travel Guide Bot🌍✈️</h1>
+
+  <!-- Ask Bot Form -->
+  <form id="ask-form" enctype="multipart/form-data">
+    <label for="question">🗺️ Ask a Travel Question</label>
+    <input type="text" id="question" name="question" required>
+
+    <label for="image">📷 Upload Landmark Photo</label>
+    <input type="file" id="image" name="image" accept="image/*">
+
+    <button type="submit">🤖 Get Landmark Info</button>
+  </form>
+
+  <!-- FIXED ID -->
+  <div id="bot-answer" class="result" style="display:none;"></div>
+
+  <!-- Send Itinerary Form -->
+  <form id="email-form" style="display:none;">
+    <label for="email">📧 Send To (Email Address)</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="itinerary">🗒️ Email Preview</label>
+    <textarea id="itinerary" name="itinerary" rows="6" required></textarea>
+
+    <button type="submit">✈️ Send Landmark Info</button>
+  </form>
+
+  <script>
+    // Handle Ask Bot
+    document.getElementById("ask-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData();
+      formData.append("question", document.getElementById("question").value);
+      const fileInput = document.getElementById("image");
+      if (fileInput.files.length > 0) {
+        formData.append("image", fileInput.files[0]);
+      }
+
+      const res = await fetch("/ask", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+      const answerDiv = document.getElementById("bot-answer");
+      answerDiv.style.display = "block";
+      answerDiv.innerHTML = `<b>📝 Landmark Details:</b><br>${JSON.stringify(data.answer)}`;
+
+      // Show email form only if bot answer is available
+      document.getElementById("email-form").style.display = "block";
+      document.getElementById("itinerary").value = data.answer || "";
+    });
+
+    // Handle Send Email
+    document.getElementById("email-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const payload = {
+        email: document.getElementById("email").value,
+        itinerary: document.getElementById("itinerary").value
+      };
+
+      const res = await fetch("/send_itinerary", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      alert(JSON.stringify(data));
+    });
+  </script>
+</body>
+</html>
